@@ -1,0 +1,345 @@
+mysql:
+  dbuser: root
+  dbpassword: ''
+  database: MbKarmaBungee
+  url: localhost
+broadcast:
+  step: 1
+  stepstart: 1
+texts:
+  error:
+    noPermission: '{RED}Du hast keine ausreichende Berechtigung!'
+    missingParameters: '{RED}Falsche Eingabe! Es fehlt ein Parameter!'
+    unknownFunction: '{RED}Unbekannte Funktion: {0}'
+    playerOffline: '{RED}Der angegebene Spieler ist nicht online!'
+    unknownPlayer: '{RED}Der angegebene Spieler ist unbekannt!'
+    unknownPlayerToggle: '{RED}Du hast noch nie Karma erhalten, daher kannst du deine
+      Partikel nicht ausblenden!'
+    unknownEffect: '{RED}Der gewählte Effekt existiert nicht!'
+    noDbConnection: '{RED}Bei der Verbindung zur Datenbank ist ein Fehler aufgetreten!'
+    particlesTooHigh: '{RED}Du hast nicht genügend Karma um diese Partikel auszuwählen!'
+  broadcast:
+    transaction: '{GRAY}{0}{DARK_GRAY} bedankt sich bei {GRAY}{1}{DARK_GRAY} mit {GRAY}{2}{DARK_GRAY}
+      {DARK_GRAY}Karma. {GRAY}{1} {DARK_GRAY}hat {DARK_GRAY}nun {GRAY}{3}{DARK_GRAY}
+      Karma'
+  info:
+    oncePerDay: '{LIGHT_PURPLE}Du kannst {WHITE}{0}{LIGHT_PURPLE} nur einmal am Tag
+      Karma geben.'
+    yourself: '{LIGHT_PURPLE}Du kannst dich nicht bei dir selbst bedanken.'
+    listHead: '{LIGHT_PURPLE}Spieler: {WHITE}{0}{LIGHT_PURPLE}, P={WHITE}Player{LIGHT_PURPLE},
+      R={WHITE}Ratio{LIGHT_PURPLE}, K={WHITE}verg. Karma{LIGHT_PURPLE}, Z={WHITE}Letzte
+      Transakt.'
+    list: '{LIGHT_PURPLE}P: {WHITE}{0} {LIGHT_PURPLE}R: {WHITE}{1} {LIGHT_PURPLE}K:
+      {WHITE}{2} {LIGHT_PURPLE}Z: {WHITE}{3}'
+    topListHead: '{LIGHT_PURPLE}Folgende Spieler führen die Liste an: '
+    topList: '{LIGHT_PURPLE}Spieler: {WHITE}{0} {LIGHT_PURPLE}Karma: {WHITE}{1}'
+    reset: '{WHITE}{0}{LIGHT_PURPLE}''s Karma wurde zurückgesetzt.'
+    set: '{WHITE}{0}{LIGHT_PURPLE}''s Karma wurde auf {WHITE}{1}{LIGHT_PURPLE} Karma
+      gesetzt.'
+    toggle: '{LIGHT_PURPLE}Karma-Partikel sind nun für dich {WHITE}{0}{LIGHT_PURPLE}!'
+    info: '{LIGHT_PURPLE}Info für Spieler {WHITE}{0}{LIGHT_PURPLE}: Karma: {WHITE}{1}{LIGHT_PURPLE}
+      Für mehr Infos: {WHITE}/karma list {0}'
+    noInfo: '{LIGHT_PURPLE}Dieser Spieler hat weder Karma vergeben noch erhalten!'
+    configReloaded: '{LIGHT_PURPLE}Die Config wurde neu geladen!'
+    configRegenerated: '{LIGHT_PURPLE}Die Config wurde neu generiert!'
+    particlesListHead: '{LIGHT_PURPLE}Folgende Partikel kannst du wählen: '
+    particlesListElementAvailable: '{LIGHT_PURPLE}{0}{WHITE}: ab Level {GREEN}{1}'
+    particlesListElementUnavailable: '{GRAY}{0}{WHITE}: ab Level {RED}{1}'
+    particlesListBottom: '{LIGHT_PURPLE}Wähle verfügbare Partikel mit {WHITE}/karma
+      particles <Partikel>{LIGHT_PURPLE}! '
+    particlesChanged: '{LIGHT_PURPLE}Deine Partikel wurden erfolgreich geändert'
+  help:
+    give: '{LIGHT_PURPLE}/karma give <Spieler> {WHITE}/{LIGHT_PURPLE} /thx <Spieler>{WHITE}:
+      Gibt einem Spieler Karma'
+    list: '{LIGHT_PURPLE}/karma list <Spieler> {WHITE}: Zeigt eine Liste aller Beziehungen
+      dieses Spielers'
+    particlesList: '{LIGHT_PURPLE}/karma particles {WHITE}: Zeigt deine auswählbaren
+      Partikel an'
+    particlesSet: '{LIGHT_PURPLE}/karma particles <Partikel> {WHITE}: Wählt die Partikel
+      aus, die dich umgeben'
+    reset: '{LIGHT_PURPLE}/karma reset <Spieler> {WHITE}: Setzt den Karma-Wert des
+      Spielers auf 0. Alle Beziehungen werden beibehalten'
+    info: '{LIGHT_PURPLE}/karma info <Spieler> {WHITE}: Zeigt eine kurze Info des
+      Spielers an'
+    top: '{LIGHT_PURPLE}/karma top {WHITE}: Zeigt die 10 Spieler mit dem meisten Karma
+      an'
+    set: '{LIGHT_PURPLE}/karma set <Spieler> <Menge> {WHITE}: Setzt den Karma-Wert
+      des Spielers auf die angegebene Menge'
+    reload: '{LIGHT_PURPLE}/karma reload {WHITE}: Lädt die Config neu'
+    regenerate: '{LIGHT_PURPLE}/karma regenerate {WHITE}: Generiert die Config neu.
+      DB-Daten werden beibehalten und eine Kopie der alten Config wird erzeugt'
+    toggle: '{LIGHT_PURPLE}/karma toggle {WHITE}: Togglet die Sichtbarkeit der eigenen
+      Partikel für andere Spieler'
+effects:
+  SMOKE:
+    delay: 10
+    displaytext: Smoke
+    aliases:
+    - SMOKE
+    - RAUCH
+  POTION_BREAK:
+    delay: 10
+    displaytext: Potion-Break
+    aliases:
+    - POTION_BREAK
+    - POTION-BREAK
+    - POTIONBREAK
+  ENDER_SIGNAL:
+    delay: 10
+    displaytext: Endersignal
+    aliases:
+    - ENDER_SIGNAL
+    - ENDERSIGNAL
+    - ENDER-SIGNAL
+  MOBSPAWNER_FLAMES:
+    delay: 10
+    displaytext: Mobspawner-Flames
+    aliases:
+    - MOBSPAWNER_FLAMES
+    - MOBSPAWNER-FLAMES
+    - MOBSPAWNER
+    - MOBSPAWNERFLAMES
+  FIREWORKS_SPARK:
+    delay: 10
+    displaytext: Fireworks-Spark
+    aliases:
+    - FIREWORKS_SPARK
+    - FIREWORKS-SPARK
+    - FIREWORKSSPARK
+    - FEUERWERK
+  CRIT:
+    delay: 10
+    displaytext: Crit
+    aliases:
+    - CRIT
+    - KRIT
+  MAGIC_CRIT:
+    delay: 10
+    displaytext: Magiccrit
+    aliases:
+    - MAGIC_CRIT
+    - MAGICCRIT
+    - MAGIC-CRIT
+    - MAGIC-KRIT
+    - MAGIE-KRIT
+    - MAGIEKRIT
+  POTION_SWIRL:
+    delay: 10
+    displaytext: Potionswirl
+    aliases:
+    - POTION_SWIRL
+    - POTIONSWIRL
+    - POTION-SWIRL
+  POTION_SWIRL_TRANSPARENT:
+    delay: 10
+    displaytext: Potionswirl-Transparent
+    aliases:
+    - POTION_SWIRL_TRANSPARENT
+    - POTION_SWIRL-TRANSPARENT
+    - POTIONSWIRL-TRANSPARENT
+    - POTION-SWIRL-TRANSPARENT
+    - POTIONSWIRLTRANSPARENT
+  SPELL:
+    delay: 5
+    displaytext: Spell
+    aliases:
+    - SPELL
+    - SPRUCH
+  INSTANT_SPELL:
+    delay: 5
+    displaytext: Instantspell
+    aliases:
+    - INSTANT_SPELL
+    - INSTANTSPELL
+    - INSTANT-SPELL
+    - INSTANT-SPRUCH
+  WITCH_MAGIC:
+    delay: 5
+    displaytext: Witchmagic
+    aliases:
+    - WITCH_MAGIC
+    - WITCHMAGIC
+    - WITCH-MAGIC
+    - WITCH
+    - HEXE
+    - HEXENMAGIE
+    - HEXEN-MAGIE
+    - HEXEN-MAGIC
+  NOTE:
+    delay: 5
+    displaytext: Note
+    aliases:
+    - NOTE
+    - MUSIK
+  PORTAL:
+    delay: 2
+    displaytext: Portal
+    aliases:
+    - PORTAL
+    - NETHERPORTAL
+    - NETHER-PORTAL
+  FLYING_GLYPH:
+    delay: 5
+    displaytext: Flying-Glyph
+    aliases:
+    - FLYING_GLYPH
+    - FLYING-GLYPH
+    - GLYPH
+    - FLIEGENDER-GLYPH
+    - GLYPHE
+  FLAME:
+    delay: 3
+    displaytext: Flame
+    aliases:
+    - FLAME
+    - FLAMME
+    - FEUER
+  LAVA_POP:
+    delay: 4
+    displaytext: Lava-Pop
+    aliases:
+    - LAVA_POP
+    - LAVA-POP
+    - LAVAPOP
+    - LAVAEXPLOSION
+  SPLASH:
+    delay: 5
+    displaytext: Splash
+    aliases:
+    - SPLASH
+    - SPLASCH
+  PARTICLE_SMOKE:
+    delay: 5
+    displaytext: Particle-Smoke
+    aliases:
+    - PARTICLE_SMOKE
+    - PARTICLE-SMOKE
+    - PARTIKEL-RAUCH
+    - PARTIKELRAUCH
+    - PARTICLESMOKE
+  EXPLOSION_HUGE:
+    delay: 20
+    displaytext: Explosion-Sehr-Groß
+    aliases:
+    - EXPLOSION_HUGE
+    - EXPLOSION-SEHR-GROß
+    - EXPLOSION-HUGE
+  EXPLOSION_LARGE:
+    delay: 15
+    displaytext: Explosion-Groß
+    aliases:
+    - EXPLOSION_LARGE
+    - EXPLOSION-GROß
+    - EXPLOSIONLARGE
+  EXPLOSION:
+    delay: 10
+    displaytext: Explosion
+    aliases:
+    - EXPLOSION
+    - EXPLOSION-NORMAL
+  VOID_FOG:
+    delay: 1
+    displaytext: Void-Fog
+    aliases:
+    - VOID_FOG
+    - VOIDFOG
+    - VOID-FOG
+    - VOIDNEBEL
+    - VOID
+  SMALL_SMOKE:
+    delay: 5
+    displaytext: Wenig-Rauch
+    aliases:
+    - SMALL_SMOKE
+    - SMALLSMOKE
+    - WENIG-RAUCH
+    - WENIG-SMOKE
+  CLOUD:
+    delay: 5
+    displaytext: Cloud
+    aliases:
+    - CLOUD
+    - WOLKE
+  COLOURED_DUST:
+    delay: 3
+    displaytext: Coloured-Dust
+    aliases:
+    - COLOURED_DUST
+    - COLOURED-DUST
+    - REDSTONE
+    - FARBSTAUB
+    - COLOUREDDUST
+  SNOWBALL_BREAK:
+    delay: 4
+    displaytext: Schneeball-Break
+    aliases:
+    - SNOWBALL_BREAK
+    - SCHNEEBALL-BREAK
+    - SNOWBALL-BREAK
+    - SCHNEEBALL
+  WATERDRIP:
+    delay: 5
+    displaytext: Water-Drip
+    aliases:
+    - WATERDRIP
+    - WATER-DRIP
+    - WASSERTROPFEN
+    - REGEN
+    - RAIN
+    - WATERDROP
+  LAVADRIP:
+    delay: 5
+    displaytext: Lava-Drip
+    aliases:
+    - LAVADRIP
+    - LAVA-DRIP
+    - LAVADROP
+  SNOW_SHOVEL:
+    delay: 5
+    displaytext: Schneeschaufel
+    aliases:
+    - SNOW_SHOVEL
+    - SCHNEESCHAUFEL
+  SLIME:
+    delay: 5
+    displaytext: Slime
+    aliases:
+    - SLIME
+    - SCHLEIM
+  HEART:
+    delay: 5
+    displaytext: Heart
+    aliases:
+    - HEART
+    - HERZ
+    - HERZCHEN
+  VILLAGER_THUNDERCLOUD:
+    delay: 5
+    displaytext: Villager-Thundercloud
+    aliases:
+    - VILLAGER_THUNDERCLOUD
+    - VILLAGER-THUNDERCLOUD
+  HAPPY_VILLAGER:
+    delay: 5
+    displaytext: Happy-Villager
+    aliases:
+    - HAPPY_VILLAGER
+    - HAPPY-VILLAGER
+  LARGE_SMOKE:
+    delay: 8
+    displaytext: Viel-Rauch
+    aliases:
+    - LARGE_SMOKE
+    - LARGE-SMOKE
+    - VIEL-RAUCH
+level:
+  '5': VOID_FOG
+  '10': WATERDRIP
+  '15': HEART
+  '20': NOTE
+  '25': LAVADRIP
+  '30': FLAME
+  '35': FIREWORKS_SPARK
+  '40': PORTAL
+  '45': SMOKE
+  '50': COLOURED_DUST
