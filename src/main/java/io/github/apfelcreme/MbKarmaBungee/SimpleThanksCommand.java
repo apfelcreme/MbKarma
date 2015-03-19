@@ -10,8 +10,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.zaiyers.UUIDDB.bungee.UUIDDB;
 
-public class SimpleThanksCommand extends Command{
+public class SimpleThanksCommand extends Command {
 
 	public SimpleThanksCommand(String name) {
 		super(name);
@@ -55,8 +56,8 @@ public class SimpleThanksCommand extends Command{
 					.getTextNode("error.missingParameters")).create());
 			return null;
 		}
-		targetUuid = MbKarmaBungee.getInstance().getPluginUuiddb()
-				.getUUIDByName(args[0]);
+		targetUuid = UUIDDB.getInstance().getStorage()
+				.getUUIDByName(args[0], false);
 		if (targetUuid != null) {
 			return new GiveTransaction(player,
 					UUID.fromString(targetUuid), args[0]);

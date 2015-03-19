@@ -1,5 +1,7 @@
 package io.github.apfelcreme.MbKarmaBungee;
 
+import io.github.apfelcreme.MbKarmaBungee.Listener.BukkitMessageListener;
+import io.github.apfelcreme.MbKarmaBungee.Listener.MbKarmaBungeeTabCompleter;
 import io.github.apfelcreme.MbKarmaBungee.Listener.ServerSwitchListener;
 
 import java.io.File;
@@ -7,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Map;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -15,12 +18,10 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import net.zaiyers.bungee.UUIDDB.UUIDDB;
 
 /**
  * MbKarma 
@@ -42,10 +43,9 @@ import net.zaiyers.bungee.UUIDDB.UUIDDB;
  * @author Lord36 aka Apfelcreme
  * 
  */
-public class MbKarmaBungee extends Plugin implements Listener {
+public class MbKarmaBungee extends Plugin {
 
 	private Configuration config;
-	private UUIDDB pluginUuiddb;
 
 	private final static ConfigurationProvider yamlConfig = ConfigurationProvider
 			.getProvider(YamlConfiguration.class);
@@ -54,7 +54,7 @@ public class MbKarmaBungee extends Plugin implements Listener {
 		return (MbKarmaBungee) net.md_5.bungee.api.ProxyServer.getInstance()
 				.getPluginManager().getPlugin("MbKarmaBungee");
 	}
-
+	
 	@Override
 	public void onEnable() {
 		// config
@@ -71,23 +71,27 @@ public class MbKarmaBungee extends Plugin implements Listener {
 				getConfig().getString("mysql.database", ""),
 				getConfig().getString("mysql.url", ""));
 		
-		// plugins
-		if (getProxy().getPluginManager().getPlugin("UUIDDB") != null) {
-			pluginUuiddb = (UUIDDB) getProxy().getPluginManager().getPlugin(
-					"UUIDDB");
-		}
 		
 		// commands
 		getProxy().getPluginManager().registerCommand(this,
 				new MbKarmaCommand("karma"));
 		getProxy().getPluginManager().registerCommand(this,
 				new SimpleThanksCommand("thx"));
+		getProxy().getPluginManager().registerCommand(this,
+				new ParticlesCommand("particles"));
 		
 		// listener
 		getProxy().getPluginManager().registerListener(this, new ServerSwitchListener());
+		getProxy().getPluginManager().registerListener(this, new MbKarmaBungeeTabCompleter());
 		
 		// pluginmessage channel
 		getProxy().registerChannel("Karma");
+        this.getProxy().getPluginManager().registerListener(this, new BukkitMessageListener());
+
+		// plugins
+		if (getProxy().getPluginManager().getPlugin("UUIDDB") == null) {
+			getLogger().severe("Plugin UUIDDB konnte nicht gefunden werden!");
+		}
 	}
 
 	@Override
@@ -139,18 +143,18 @@ public class MbKarmaBungee extends Plugin implements Listener {
 	 * @param targetPlayer
 	 * @param isVisible
 	 */
-	public void sendKarmaVisibilityChangeMessage(ProxiedPlayer targetPlayer,
-			Boolean isVisible, Double karma) {
+	public void sendParticleToggleMessage(ProxiedPlayer targetPlayer, String effect, long effectDelay, boolean seesParticles) {
 		if(targetPlayer == null) {
 			// the player is offline and no particles need to be applied
 			return;
 		}
 		ServerInfo serverInfo = targetPlayer.getServer().getInfo();
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		out.writeUTF("KarmaVisibilityChange");
-		out.writeUTF(isVisible.toString());
-		out.writeUTF(karma.toString());
+		out.writeUTF("ToggleParticleVisibility");
 		out.writeUTF(targetPlayer.getUniqueId().toString());
+		out.writeUTF(effect);
+		out.writeLong(effectDelay);
+		out.writeBoolean(seesParticles);
 		serverInfo.sendData("Karma", out.toByteArray());
 	}
 	
@@ -205,14 +209,7 @@ public class MbKarmaBungee extends Plugin implements Listener {
 	public void setConfig(Configuration config) {
 		this.config = config;
 	}
-
-	/**
-	 * @return the pluginUuiddb
-	 */
-	public UUIDDB getPluginUuiddb() {
-		return pluginUuiddb;
-	}
-
+	
 	/**
 	 * saves the config
 	 */
@@ -296,11 +293,11 @@ public class MbKarmaBungee extends Plugin implements Listener {
 		config.set("texts.info.particlesListHead",
 				"{LIGHT_PURPLE}Folgende Partikel kannst du wählen: ");
 		config.set("texts.info.particlesListElementAvailable",
-				"{LIGHT_PURPLE}{0}{WHITE}: ab Level {GREEN}{1}");
+				"{LIGHT_PURPLE}{0}{WHITE}: ab {GREEN}{1}{WHITE} Karma");
 		config.set("texts.info.particlesListElementUnavailable",
-				"{GRAY}{0}{WHITE}: ab Level {RED}{1}");
+				"{GRAY}{0}{WHITE}: ab {RED}{1}{WHITE} Karma");
 		config.set("texts.info.particlesListBottom",
-				"{LIGHT_PURPLE}Wähle verfügbare Partikel mit {WHITE}/karma particles <Partikel>{LIGHT_PURPLE}! ");
+				"{LIGHT_PURPLE}Wähle verfügbare Partikel mit {WHITE}/particles <Partikel>{LIGHT_PURPLE}! ");
 		config.set("texts.info.particlesChanged",
 				"{LIGHT_PURPLE}Deine Partikel wurden erfolgreich geändert");
 		
@@ -313,10 +310,10 @@ public class MbKarmaBungee extends Plugin implements Listener {
 				"{LIGHT_PURPLE}/karma list <Spieler> {WHITE}: Zeigt eine Liste aller Beziehungen dieses Spielers");
 		config.set(
 				"texts.help.particlesList",
-				"{LIGHT_PURPLE}/karma particles {WHITE}: Zeigt deine auswählbaren Partikel an");
+				"{LIGHT_PURPLE}/particles {WHITE}: Zeigt deine auswählbaren Partikel an");
 		config.set(
 				"texts.help.particlesSet",
-				"{LIGHT_PURPLE}/karma particles <Partikel> {WHITE}: Wählt die Partikel aus, die dich umgeben");
+				"{LIGHT_PURPLE}/particles <Partikel> {WHITE}: Wählt die Partikel aus, die dich umgeben");
 		config.set(
 				"texts.help.reset",
 				"{LIGHT_PURPLE}/karma reset <Spieler> {WHITE}: Setzt den Karma-Wert des Spielers auf 0. Alle Beziehungen werden beibehalten");
@@ -336,7 +333,7 @@ public class MbKarmaBungee extends Plugin implements Listener {
 				"{LIGHT_PURPLE}/karma regenerate {WHITE}: Generiert die Config neu. DB-Daten werden beibehalten und eine Kopie der alten Config wird erzeugt");
 		config.set(
 				"texts.help.toggle",
-				"{LIGHT_PURPLE}/karma toggle {WHITE}: Togglet die Sichtbarkeit der eigenen Partikel für andere Spieler");
+				"{LIGHT_PURPLE}/particles toggle {WHITE}: Togglet die Sichtbarkeit der eigenen Partikel für andere Spieler");
 		
 		//effect specifications
 		config.set("effects.SMOKE.delay", 10L);
@@ -491,5 +488,26 @@ public class MbKarmaBungee extends Plugin implements Listener {
 		} else {
 			return "Missing text node: " + key;
 		}
+	}
+
+	
+	/**
+	 * looks the given string up in the config and returns the matching Effect	
+	 * @param effect
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static String parseEffectString(String effect) {
+		if (effect == null) {
+			return null;
+		}
+		for (String key : ((Map<String, String>)MbKarmaBungee.getInstance().getConfig().get("effects")).keySet()) {
+			if (MbKarmaBungee.getInstance().getConfig()
+					.getStringList("effects." + key + ".aliases")
+					.contains(effect)) {
+				return key;
+			}
+		}
+		return null;
 	}
 }

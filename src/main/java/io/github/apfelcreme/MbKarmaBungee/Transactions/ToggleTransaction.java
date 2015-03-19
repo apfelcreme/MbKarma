@@ -68,7 +68,7 @@ public class ToggleTransaction extends Transaction {
 														: "unsichtbar"))
 										.create());
 								MbKarmaBungee.getInstance().
-								sendEffectChangeMessage(sender, effect, effectDelay, toSet);
+									sendParticleToggleMessage(sender, effect, effectDelay, toSet);
 								
 								statement.close();
 								

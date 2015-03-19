@@ -58,6 +58,8 @@ public class GiveTransaction extends Transaction {
 					.getTextNode("info.yourself")).create());
 			return;
 		}
+		
+		targetPlayerName = MbKarmaBungee.getInstance().getProxy().getPlayer(targetPlayer).getDisplayName();
 
 		MbKarmaBungee.getInstance().getProxy().getScheduler()
 				.runAsync(MbKarmaBungee.getInstance(), new Runnable() {
@@ -257,7 +259,6 @@ public class GiveTransaction extends Transaction {
 							} else {
 								sender.sendMessage(new ComponentBuilder(MbKarmaBungee.getInstance()
 										.getTextNode("info.oncePerDay")
-										.replace("{0}", targetPlayerName)
 										.replace("{0}", targetPlayerName))
 										.create());
 							}

@@ -45,24 +45,25 @@ public class TopListTransaction extends Transaction {
 						PreparedStatement statement;
 						try {
 							statement = con
-									.prepareStatement("Select playername, currentAmount from MbKarma_Player order by currentAmount desc limit 0, 10");
+									.prepareStatement("Select playername, uuid, currentAmount from MbKarma_Player order by currentAmount desc limit 0, 10");
 							res = statement.executeQuery();
 							sender.sendMessage(new ComponentBuilder(MbKarmaBungee.getInstance()
 									.getTextNode("info.topListHead")).create());
 							res.beforeFirst();
 							while (res.next()) {
-								sender.sendMessage(new ComponentBuilder(
-										MbKarmaBungee.getInstance().getTextNode("info.topList")
-												.replace(
-														"{0}",
-														res.getString("playername"))
-												.replace(
-														"{1}",
-														String.format(
-																"%.2f",
-																res.getDouble("currentAmount"))))
-										.create());
-
+								if (!MbKarmaBungee.getInstance().getProxy().getPlayer(res.getString("uuid")).hasPermission("MbKarma.hideTop")) {
+									sender.sendMessage(new ComponentBuilder(
+											MbKarmaBungee.getInstance().getTextNode("info.topList")
+													.replace(
+															"{0}",
+															res.getString("playername"))
+													.replace(
+															"{1}",
+															String.format(
+																	"%.2f",
+																	res.getDouble("currentAmount"))))
+											.create());
+								}
 							}
 						} catch (SQLException e) {
 							e.printStackTrace();

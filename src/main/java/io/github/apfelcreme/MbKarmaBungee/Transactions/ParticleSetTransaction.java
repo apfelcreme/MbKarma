@@ -5,7 +5,6 @@ import io.github.apfelcreme.MbKarmaBungee.MbKarmaBungee;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -25,7 +24,7 @@ public class ParticleSetTransaction extends Transaction {
 		final Connection connection = DatabaseConnectionManager.getInstance()
 				.getConnection();
 
-		final String permission = "MbKarma.particles";
+		final String permission = "MbKarma.setParticlesManually";
 
 		// check mandatory Parameters and stuff
 		if (!sender.hasPermission(permission)) {
@@ -45,48 +44,40 @@ public class ParticleSetTransaction extends Transaction {
 					public void run() {
 
 						PreparedStatement statement;
-						ResultSet res;
 
 						try {
 							statement = connection
-									.prepareStatement("Select currentAmount, seesParticles FROM MbKarma_Player where uuid = ?;");
-							statement.setString(1, sender.getUniqueId()
+									.prepareStatement("UPDATE MbKarma_Player SET effect = ? where uuid = ?;");
+							statement.setString(1, effect);
+							statement.setString(2, sender.getUniqueId()
 									.toString());
-							res = statement.executeQuery();
-							if (res.first()) {
-								double currentAmount = res.getDouble("currentAmount");
-								boolean seesParticles = res.getBoolean("seesParticles");
-								if (Transaction.getEffectLevel(effect) <= currentAmount) {
-									statement = connection
-											.prepareStatement("UPDATE MbKarma_Player SET effect = ? where uuid = ?;");
-									statement.setString(1, effect);
-									statement.setString(2, sender.getUniqueId()
-											.toString());
-									statement.executeUpdate();
-									sender.sendMessage(new ComponentBuilder(
-											MbKarmaBungee.getInstance()
-													.getTextNode(
-															"info.particlesChanged"))
-											.create());
-									MbKarmaBungee.getInstance().sendEffectChangeMessage(sender, effect, MbKarmaBungee.getInstance().getConfig().getLong("effects."+effect+".delay"), seesParticles);
-									MbKarmaBungee
-											.getInstance()
-											.getLogger()
-											.info("Karma-Transaktion - SETPARTICLES : "
-													+ sender.getName()
-													+ "("
-													+ sender.getUniqueId()
-															.toString()
-													+ ") --> " + "effect");
-								} else {
-									sender.sendMessage(new ComponentBuilder(
-											MbKarmaBungee.getInstance()
-													.getTextNode(
-															"error.particlesTooHigh"))
-											.create());
-
-								}
-							}
+							statement.executeUpdate();
+							MbKarmaBungee
+									.getInstance()
+									.sendEffectChangeMessage(
+											sender,
+											effect,
+											MbKarmaBungee
+													.getInstance()
+													.getConfig()
+													.getLong(
+															"effects." + effect
+																	+ ".delay"),
+											true);
+							sender.sendMessage(new ComponentBuilder(
+									MbKarmaBungee.getInstance()
+											.getTextNode(
+													"info.particlesChanged"))
+									.create());
+							MbKarmaBungee
+									.getInstance()
+									.getLogger()
+									.info("Karma-Transaktion - SETPARTICLES : "
+											+ sender.getName()
+											+ "("
+											+ sender.getUniqueId()
+													.toString()
+											+ ") --> " + "effect");
 							connection.close();
 						} catch (SQLException e) {
 							e.printStackTrace();
