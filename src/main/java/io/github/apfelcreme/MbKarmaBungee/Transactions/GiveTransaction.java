@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
-
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -190,7 +189,7 @@ public class GiveTransaction extends Transaction {
 								statement.setString(6, targetPlayer.toString());
 								statement.executeUpdate();
 								statement.close();
-
+								
 								// get the target player's playerid as mysql
 								// isnt able to update a
 								// table when selecting the key for the where
@@ -214,36 +213,48 @@ public class GiveTransaction extends Transaction {
 								statement.close();
 
 								// done
-								String broadcastMessage = MbKarmaBungee.getInstance()
-										.getTextNode("broadcast.transaction")
-										.replace("{0}", sender.getName())
-										.replace("{1}", targetPlayerName)
+								String receiveMessage = MbKarmaBungee
+										.getInstance()
+										.getTextNode("info.karmaReceived")
 										.replace(
-												"{2}",
+												"{0}",
 												String.format("%.2f",
 														(currentRatio)))
+										.replace("{1}", sender.getDisplayName());
+								String sentMessage = MbKarmaBungee
+										.getInstance()
+										.getTextNode("info.karmaSent")
 										.replace(
-												"{3}",
-												String.format(
-														"%.2f",
-														(currentAmount + currentRatio)));
-
+												"{0}",
+												String.format("%.2f",
+														(currentRatio)))
+										.replace("{1}", targetPlayerName);									
+								MbKarmaBungee
+										.getInstance()
+										.getProxy()
+										.getPlayer(targetPlayer)
+										.sendMessage(new ComponentBuilder(receiveMessage).create());
+								
+								sender.sendMessage(new ComponentBuilder(sentMessage).create());
 								// send broadcast only every time the user
 								// reaches a new multiple of
 								// the step. (e.g. step= 10, then from 9-10,
 								// 19-20, 29-30, ...), or
 								// the current amount of karma is less than a
 								// predefined value
-  								// "stepstart"
-//								if ((currentAmount + currentRatio)
-//										% MbKarmaBungee.getInstance().getConfig().getInt(
-//												"broadcast.step", 1) < 1
-//										|| (currentAmount + currentRatio) <= MbKarmaBungee.getInstance()
-//												.getConfig().getInt(
-//														"broadcast.stepstart",
-//														1)) {
-								MbKarmaBungee.getInstance().sendBroadcast(broadcastMessage);
-//								}
+								// "stepstart"
+								// if ((currentAmount + currentRatio)
+								// %
+								// MbKarmaBungee.getInstance().getConfig().getInt(
+								// "broadcast.step", 1) < 1
+								// || (currentAmount + currentRatio) <=
+								// MbKarmaBungee.getInstance()
+								// .getConfig().getInt(
+								// "broadcast.stepstart",
+								// 1)) {
+								// MbKarmaBungee.getInstance().sendBroadcast(broadcastMessage);
+								// }
+								MbKarmaBungee.getInstance().getChatNotificationTask().add(targetPlayerName);
 								MbKarmaBungee.getInstance().getLogger()
 										.info("Karma-Transaktion - GIVE : "
 												+ sender.getName()

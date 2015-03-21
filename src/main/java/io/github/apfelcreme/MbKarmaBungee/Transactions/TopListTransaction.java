@@ -51,7 +51,7 @@ public class TopListTransaction extends Transaction {
 									.getTextNode("info.topListHead")).create());
 							res.beforeFirst();
 							while (res.next()) {
-								if (!MbKarmaBungee.getInstance().getProxy().getPlayer(res.getString("uuid")).hasPermission("MbKarma.hideTop")) {
+//								if (!MbKarmaBungee.getInstance().getProxy().getPlayer(UUID.fromString(res.getString("uuid"))).hasPermission("MbKarma.hideTop")) {
 									sender.sendMessage(new ComponentBuilder(
 											MbKarmaBungee.getInstance().getTextNode("info.topList")
 													.replace(
@@ -63,7 +63,7 @@ public class TopListTransaction extends Transaction {
 																	"%.2f",
 																	res.getDouble("currentAmount"))))
 											.create());
-								}
+//								}
 							}
 						} catch (SQLException e) {
 							e.printStackTrace();

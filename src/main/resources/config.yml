@@ -1,11 +1,12 @@
 mysql:
   dbuser: root
   dbpassword: ''
-  database: MbKarmaBungee
+  database: MbKarmaBungee2
   url: localhost
 broadcast:
   step: 1
   stepstart: 1
+  notificationDelay: 5
 texts:
   error:
     noPermission: '{RED}Du hast keine ausreichende Berechtigung!'
@@ -20,17 +21,18 @@ texts:
     particlesTooHigh: '{RED}Du hast nicht genügend Karma um diese Partikel auszuwählen!'
   broadcast:
     transaction: '{GRAY}{0}{DARK_GRAY} bedankt sich bei {GRAY}{1}{DARK_GRAY} mit {GRAY}{2}{DARK_GRAY}
-      {DARK_GRAY}Karma. {GRAY}{1} {DARK_GRAY}hat {DARK_GRAY}nun {GRAY}{3}{DARK_GRAY}
-      Karma'
+      {DARK_GRAY}Karma. {GRAY}{1} {DARK_GRAY}hat {DARK_GRAY}nun {GRAY}{3} {DARK_GRAY}Karma'
+    notificationBroadcast: '{GRAY}In den letzten {WHITE}{0}{GRAY} Minuten haben sich
+      insgesamt {WHITE}{1} {GRAY}Spieler {GRAY}bei {WHITE}{2} {GRAY}bedankt!'
   info:
     oncePerDay: '{LIGHT_PURPLE}Du kannst {WHITE}{0}{LIGHT_PURPLE} nur einmal am Tag
       Karma geben.'
     yourself: '{LIGHT_PURPLE}Du kannst dich nicht bei dir selbst bedanken.'
     listHead: '{LIGHT_PURPLE}Spieler: {WHITE}{0}{LIGHT_PURPLE}, P={WHITE}Player{LIGHT_PURPLE},
-      R={WHITE}Ratio{LIGHT_PURPLE}, K={WHITE}verg. Karma{LIGHT_PURPLE}, Z={WHITE}Letzte
-      Transakt.'
+      R={WHITE}Ratio{LIGHT_PURPLE}, K={WHITE}verg. Karma{LIGHT_PURPLE}, E={WHITE}erh.
+      Karma{LIGHT_PURPLE}, {LIGHT_PURPLE}Z={WHITE}Letzte Transakt.'
     list: '{LIGHT_PURPLE}P: {WHITE}{0} {LIGHT_PURPLE}R: {WHITE}{1} {LIGHT_PURPLE}K:
-      {WHITE}{2} {LIGHT_PURPLE}Z: {WHITE}{3}'
+      {WHITE}{2} {LIGHT_PURPLE}E: {WHITE}{3} {LIGHT_PURPLE}Z: {WHITE}{4}'
     topListHead: '{LIGHT_PURPLE}Folgende Spieler führen die Liste an: '
     topList: '{LIGHT_PURPLE}Spieler: {WHITE}{0} {LIGHT_PURPLE}Karma: {WHITE}{1}'
     reset: '{WHITE}{0}{LIGHT_PURPLE}''s Karma wurde zurückgesetzt.'
@@ -43,19 +45,24 @@ texts:
     configReloaded: '{LIGHT_PURPLE}Die Config wurde neu geladen!'
     configRegenerated: '{LIGHT_PURPLE}Die Config wurde neu generiert!'
     particlesListHead: '{LIGHT_PURPLE}Folgende Partikel kannst du wählen: '
-    particlesListElementAvailable: '{LIGHT_PURPLE}{0}{WHITE}: ab Level {GREEN}{1}'
-    particlesListElementUnavailable: '{GRAY}{0}{WHITE}: ab Level {RED}{1}'
-    particlesListBottom: '{LIGHT_PURPLE}Wähle verfügbare Partikel mit {WHITE}/karma
-      particles <Partikel>{LIGHT_PURPLE}! '
+    particlesListElementAvailable: '{LIGHT_PURPLE}{0}{WHITE}: ab {GREEN}{1}{WHITE}
+      Karma'
+    particlesListElementUnavailable: '{GRAY}{0}{WHITE}: ab {RED}{1}{WHITE} Karma'
+    particlesListBottom: '{LIGHT_PURPLE}Wähle verfügbare Partikel mit {WHITE}/particles
+      <Partikel>{LIGHT_PURPLE}! '
     particlesChanged: '{LIGHT_PURPLE}Deine Partikel wurden erfolgreich geändert'
+    karmaReceived: '{LIGHT_PURPLE}Du hast {WHITE}{0}{LIGHT_PURPLE} Karma von {WHITE}{1}{LIGHT_PURPLE}
+      erhalten!'
+    karmaSent: '{LIGHT_PURPLE}Du hast {WHITE}{0}{LIGHT_PURPLE} Karma an {WHITE}{1}{LIGHT_PURPLE}
+      gegeben!'
   help:
     give: '{LIGHT_PURPLE}/karma give <Spieler> {WHITE}/{LIGHT_PURPLE} /thx <Spieler>{WHITE}:
       Gibt einem Spieler Karma'
     list: '{LIGHT_PURPLE}/karma list <Spieler> {WHITE}: Zeigt eine Liste aller Beziehungen
       dieses Spielers'
-    particlesList: '{LIGHT_PURPLE}/karma particles {WHITE}: Zeigt deine auswählbaren
-      Partikel an'
-    particlesSet: '{LIGHT_PURPLE}/karma particles <Partikel> {WHITE}: Wählt die Partikel
+    particlesList: '{LIGHT_PURPLE}/particles {WHITE}: Zeigt deine auswählbaren Partikel
+      an'
+    particlesSet: '{LIGHT_PURPLE}/particles <Partikel> {WHITE}: Wählt die Partikel
       aus, die dich umgeben'
     reset: '{LIGHT_PURPLE}/karma reset <Spieler> {WHITE}: Setzt den Karma-Wert des
       Spielers auf 0. Alle Beziehungen werden beibehalten'
@@ -68,8 +75,8 @@ texts:
     reload: '{LIGHT_PURPLE}/karma reload {WHITE}: Lädt die Config neu'
     regenerate: '{LIGHT_PURPLE}/karma regenerate {WHITE}: Generiert die Config neu.
       DB-Daten werden beibehalten und eine Kopie der alten Config wird erzeugt'
-    toggle: '{LIGHT_PURPLE}/karma toggle {WHITE}: Togglet die Sichtbarkeit der eigenen
-      Partikel für andere Spieler'
+    toggle: '{LIGHT_PURPLE}/particles toggle {WHITE}: Togglet die Sichtbarkeit der
+      eigenen Partikel für andere Spieler'
 effects:
   SMOKE:
     delay: 10

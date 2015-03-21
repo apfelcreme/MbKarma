@@ -5,7 +5,7 @@
 
 	<groupId>io.github.apfelcreme.MbKarmaBungee</groupId>
 	<artifactId>MbKarmaBungee</artifactId>
-	<version>2.0.2</version>
+	<version>2.0.4</version>
 
 	<repositories>
  	<repository>
@@ -32,6 +32,7 @@
 					<artifactSet>
 						<includes>
 							<include>org.apache.commons:commons-lang3</include>
+							<include>commons-lang:commons-lang</include>
 						</includes>
 						<excludes></excludes>
 					</artifactSet>
@@ -59,7 +60,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.3.2</version>
-		</dependency>	
+		</dependency>			
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

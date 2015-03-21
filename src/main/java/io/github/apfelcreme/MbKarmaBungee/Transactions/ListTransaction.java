@@ -57,7 +57,17 @@ public class ListTransaction extends Transaction {
 							ResultSet res = null;
 							PreparedStatement statement;
 							statement = connection
-									.prepareStatement("Select t.playername, t.currentAmount, r.timestamp, r.relationratio, r.relationamount "
+									.prepareStatement(""
+											+ "Select t.playername, "
+											+ "t.currentAmount, "
+											+ "r.timestamp, "
+											+ "r.relationratio, "
+											+ "r.relationamount, "
+											+ "(Select "
+												+ "relationAmount from MbKarma_Relations "
+												+ "where playerId = r.targetid "
+												+ "and targetId = r.playerid"
+												+ ") as receivedFromTarget "
 											+ "from MbKarma_Relations r inner join MbKarma_Player p on r.playerid = p.playerid "
 											+ "inner join MbKarma_Player t on r.targetid = t.playerid "
 											+ "where p.uuid = ?");
@@ -76,7 +86,7 @@ public class ListTransaction extends Transaction {
 												.replace(
 														"{1}",
 														new DecimalFormat(
-																"#.####").format(res
+																"#.###").format(res
 																.getDouble("relationratio")))
 												.replace(
 														"{2}",
@@ -85,8 +95,13 @@ public class ListTransaction extends Transaction {
 																.getDouble("relationamount")))
 												.replace(
 														"{3}",
+														new DecimalFormat(
+																"#.###").format(res
+																.getDouble("receivedFromTarget")))
+												.replace(
+														"{4}",
 														new SimpleDateFormat(
-																"dd.MM.yyyy HH:mm:ss",
+																"dd.MM.yy HH:mm",
 																Locale.GERMAN)
 																.format(new java.util.Date(
 																		res.getLong("timestamp")))))
